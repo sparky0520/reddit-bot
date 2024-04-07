@@ -1,7 +1,5 @@
 import praw
 import tweepy
-import nltk
-nltk.download('punkt')
 
 # Reddit app credentials
 reddit_client_id = "6WkJjC3repmR74-Jgg09fw"
@@ -10,10 +8,11 @@ reddit_username = "sparky_xelite"
 reddit_password = "Sparky@2005"
 
 # Twitter app credentials (API keys and tokens)
-twitter_consumer_key = "mwVc9zQGm4RVYXe2aqHVZ6iyT"
-twitter_consumer_secret = "gpDGqMZvPfO9u6qnlqgTDtHXVXv6qntvGNdSsS8ZqQmNEjm7gZ"
-twitter_access_token = "1324319741998104576-07IGlcSaDaWMIfqRhrSQzJMkU9ci9G"
-twitter_access_token_secret = "k6B5zc1MHAg60rHQbhx4yqF30IA0j5cGUOuMmDSkaIDN1"
+twitter_consumer_key = "jmXHA3idAPVinKkh4CzGkc1SV"
+twitter_consumer_secret = "5hPc91G5h6LWijwavgKmxd0dtjwAr7KFpDIOMJH6CPLDqJUta4"
+bearer_token = r"AAAAAAAAAAAAAAAAAAAAAJO%2BtAEAAAAAPIilWEmherRmOKMfr9AszgFuQtM%3D8rLq8oWx2D1aGuOntlJMBrNTvbSw3ER8rplgUFvOrZQVSWGIy9"
+twitter_access_token = "1324319741998104576-NYl0W3Y845d8nbph2W8BpCBmn65YRY"
+twitter_access_token_secret = "pswdQUDzfUQxBOTlULRBg84pc5w3atYHzginCxoYfPgVP"
 
 # Define keywords for incident classification
 fire_keywords = ["fire breaks out",
@@ -167,10 +166,12 @@ reddit = praw.Reddit(client_id=reddit_client_id,
                      password=reddit_password,
                      user_agent="Delhi Incident Reporter Bot")
 
-# Authenticate Twitter
-auth = tweepy.OAuthHandler(twitter_consumer_key, twitter_consumer_secret)
-auth.set_access_token(twitter_access_token, twitter_access_token_secret)
-twitter_api = tweepy.API(auth)
+# Connect Bot to Twitter API - With this tweepy is now fully set up
+client = tweepy.Client(bearer_token,twitter_consumer_key,twitter_consumer_secret,twitter_access_token,twitter_access_token_secret)
+
+# Not essential, but used to access some old tweepy features
+auth = tweepy.OAuth1UserHandler(twitter_consumer_key,twitter_consumer_secret,twitter_access_token,twitter_access_token_secret)
+api = tweepy.API(auth)
 
 # Subreddit stream for monitoring new posts
 subreddit = reddit.subreddit("delhi")
@@ -181,40 +182,41 @@ for submission in subreddit.stream.submissions():
         continue
 
     # Text preprocessing for classification
-    text = submission.title + " " + submission.selftext.lower()
-    tokens = nltk.word_tokenize(text)
+    text = submission.title + " " + submission.selftext
+    text = text.lower()
 
     # Classify incident type
-    is_fire = any(word in tokens for word in fire_keywords)
-    is_water_leakage = any(word in tokens for word in water_leakage_keywords)
-    is_road_damaged = any(word in tokens for word in road_damaged_keywords)
-    is_building_collapse = any(word in tokens for word in building_collapse_keywords)
-    is_trash_pile = any(word in tokens for word in trash_pile_keywords)
+    is_fire = any(word in text for word in fire_keywords)
+    is_water_leakage = any(word in text for word in water_leakage_keywords)
+    is_road_damaged = any(word in text for word in road_damaged_keywords)
+    is_building_collapse = any(word in text for word in building_collapse_keywords)
+    is_trash_pile = any(word in text for word in trash_pile_keywords)
+
+    # Extract location details
+    location = None
+    for word in location_keywords:
+        if word in text:
+            location = word.title()
+            break
 
     if is_fire:
         incident_type = "Fire"
-        # Extract location details (implementation needed)
-        location = any(word in tokens for word in location_keywords)  # Extract from post or set a generic location
         # Craft tweet message
         tweet_text = f"{incident_type} reported in {location}. #DelhiFireService @DelhiFire"
     elif is_water_leakage:
         incident_type = "Water Leakage"
-        location = any(word in tokens for word in location_keywords)  # Extract from post or set a generic location
         # Craft tweet message
         tweet_text = f"{incident_type} reported in {location}. #Delhi जल Board @DelhiJalBoard"
     elif is_road_damaged:
         incident_type = "Road Damaged"
-        location = any(word in tokens for word in location_keywords)  # Extract from post or set a generic location
         # Craft tweet message
         tweet_text = f"{incident_type} reported in {location}. @MCD_Delhi @DelhiPwd #DelhiTrafficPolice"
     elif is_building_collapse:
         incident_type = "Building Collapse"
-        location = any(word in tokens for word in location_keywords)  # Extract from post or set a generic location
         # Craft tweet message
         tweet_text = f"{incident_type} reported in {location}. #DelhiFireService @DelhiFire"
     elif is_trash_pile:
         incident_type = "Trash Pile"
-        location = any(word in tokens for word in location_keywords)  # Extract from post or set a generic location
         # Craft tweet message
         tweet_text = f"{incident_type} reported in {location}. @MCD_Delhi  #SwachhDelhi"
     else:
@@ -222,6 +224,6 @@ for submission in subreddit.stream.submissions():
         continue
 
     # Post the tweet
-    twitter_api.update_status(status=tweet_text)
+    client.create_tweet(text=tweet_text + '\n\nThis is a test tweet. Please dont take it seriously.')
 
     print(f"Tweeted: {tweet_text}")
