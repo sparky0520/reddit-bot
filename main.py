@@ -3,13 +3,13 @@ import tweepy
 import nltk
 nltk.download('punkt')
 
-# Replace with your Reddit app credentials
+# Reddit app credentials
 reddit_client_id = "6WkJjC3repmR74-Jgg09fw"
 reddit_client_secret = "-Db2z_gzhj6cbidpzbrCJH0CWivSgw"
 reddit_username = "sparky_xelite"
 reddit_password = "Sparky@2005"
 
-# Replace with your Twitter app credentials (API keys and tokens)
+# Twitter app credentials (API keys and tokens)
 twitter_consumer_key = "mwVc9zQGm4RVYXe2aqHVZ6iyT"
 twitter_consumer_secret = "gpDGqMZvPfO9u6qnlqgTDtHXVXv6qntvGNdSsS8ZqQmNEjm7gZ"
 twitter_access_token = "1324319741998104576-07IGlcSaDaWMIfqRhrSQzJMkU9ci9G"
@@ -48,6 +48,118 @@ trash_pile_keywords = [
     "waste is piling up",
     "waste piling up"
 ]
+
+# Define locations within Delhi
+location_keywords = [
+    "new delhi",
+    "central delhi",
+    "east delhi",
+    "north delhi",
+    "north east delhi",
+    "north west delhi",
+    "south delhi",
+    "south east delhi",
+    "south west delhi",
+    "west delhi",
+    "rajouri garden",
+    "punjabi bagh",
+    "janakpuri",
+    "tilak nagar",
+    "patel nagar",
+    "dwarka",
+    "palam",
+    "mandi house",
+    "moolchand",
+    "central secretariat",
+    "vasant vihar",
+    "najafgarh",
+    "dabri",
+    "lajpat nagar",
+    "defence colony",
+    "sarita vihar",
+    "kalkaji",
+    "govindpuri",
+    "hauz khas",
+    "saket",
+    "greater kailash",
+    "vasant kunj",
+    "defence colony",
+    "rohini",
+    "pitampura",
+    "lok kalyan marg",
+    "shalimar bagh",
+    "ashok vihar",
+    "wazirpur",
+    "yamuna vihar",
+    "bikaji kama place",
+    "nehru place",
+    "netaji subash place",
+    "jhilmil",
+    "karkarduma",
+    "dilshad garden",
+    "shahdara",
+    "nand nagri",
+    "seelampur",
+    "civil lines",
+    "kashmere gate",
+    "okhla",
+    "model town",
+    "tis hazari",
+    "pitampura",
+    "mangolpuri",
+    "kanjhawala",
+    "india gate",
+    "red fort",
+    "qutub minar",
+    "lotus temple",
+    "pragati maidan",
+    "narela",
+    "race course",
+    "malviya nagar",
+    "sarojni nagar",
+    "vinobapuri",
+    "samaypur badli",
+    "shalimar bagh",
+    "wazirabad",
+    "india gate",
+    "rashtrapati bhavan",
+    "parliament house",
+    "diplomatic enclave",
+    "khan market",
+    "preet vihar",
+    "mayur vihar",
+    "shahdara",
+    "gandhi nagar",
+    "krishna nagar",
+    "connaught place",
+    "chandni chowk",
+    "daryaganj",
+    "paharganj",
+    "karol bagh",
+    "ring road",
+    "mahatma gandhi road",
+    "outer ring road",
+    "inner ring road",
+    "nh44",
+    "nh48",
+    "nh9",
+    "delhi-gurgaon expressway",
+    "delhi-noida direct flyway",
+    "barapullah elevated road",
+    "akshardham flyover",
+    "mehrauli-gurgaon road",
+    "delhi-meerut expressway",
+    "noida-greater noida expressway",
+    "chhatarpur road",
+    "mathura road",
+    "aurobindo marg",
+    "bhairon marg",
+    "dr. zakir hussain marg",
+    "nelson mandela marg",
+    "bahadur shah zafar marg",
+    "gt karnal road"
+]
+
 # Initialize Reddit and Twitter clients
 reddit = praw.Reddit(client_id=reddit_client_id,
                      client_secret=reddit_client_secret,
@@ -82,31 +194,27 @@ for submission in subreddit.stream.submissions():
     if is_fire:
         incident_type = "Fire"
         # Extract location details (implementation needed)
-        location = "..."  # Extract from post or set a generic location
+        location = any(word in tokens for word in location_keywords)  # Extract from post or set a generic location
         # Craft tweet message
-        tweet_text = f"{incident_type} reported in {location}. #DelFireService @DelhiFire"
+        tweet_text = f"{incident_type} reported in {location}. #DelhiFireService @DelhiFire"
     elif is_water_leakage:
         incident_type = "Water Leakage"
-        # Extract location details (implementation needed)
-        location = "..."  # Extract from post or set a generic location
+        location = any(word in tokens for word in location_keywords)  # Extract from post or set a generic location
         # Craft tweet message
         tweet_text = f"{incident_type} reported in {location}. #Delhi जल Board @DelhiJalBoard"
     elif is_road_damaged:
         incident_type = "Road Damaged"
-        # Extract location details (implementation needed)
-        location = "..."  # Extract from post or set a generic location
+        location = any(word in tokens for word in location_keywords)  # Extract from post or set a generic location
         # Craft tweet message
         tweet_text = f"{incident_type} reported in {location}. @MCD_Delhi @DelhiPwd #DelhiTrafficPolice"
     elif is_building_collapse:
-        incident_type = "Water Leakage"
-        # Extract location details (implementation needed)
-        location = "..."  # Extract from post or set a generic location
+        incident_type = "Building Collapse"
+        location = any(word in tokens for word in location_keywords)  # Extract from post or set a generic location
         # Craft tweet message
-        tweet_text = f"{incident_type} reported in {location}. #DelFireService @DelhiFire"
+        tweet_text = f"{incident_type} reported in {location}. #DelhiFireService @DelhiFire"
     elif is_trash_pile:
-        incident_type = "Water Leakage"
-        # Extract location details (implementation needed)
-        location = "..."  # Extract from post or set a generic location
+        incident_type = "Trash Pile"
+        location = any(word in tokens for word in location_keywords)  # Extract from post or set a generic location
         # Craft tweet message
         tweet_text = f"{incident_type} reported in {location}. @MCD_Delhi  #SwachhDelhi"
     else:
