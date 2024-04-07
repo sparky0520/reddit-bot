@@ -84,7 +84,7 @@ for submission in subreddit.stream.submissions():
         # Extract location details (implementation needed)
         location = "..."  # Extract from post or set a generic location
         # Craft tweet message
-        tweet_text = f"{incident_type} reported in {location}. #DelhiFireService @DelhiFire"
+        tweet_text = f"{incident_type} reported in {location}. #DelFireService @DelhiFire"
     elif is_water_leakage:
         incident_type = "Water Leakage"
         # Extract location details (implementation needed)
@@ -102,7 +102,7 @@ for submission in subreddit.stream.submissions():
         # Extract location details (implementation needed)
         location = "..."  # Extract from post or set a generic location
         # Craft tweet message
-        tweet_text = f"{incident_type} reported in {location}. #DelhiFireService @DelhiFire"
+        tweet_text = f"{incident_type} reported in {location}. #DelFireService @DelhiFire"
     elif is_trash_pile:
         incident_type = "Water Leakage"
         # Extract location details (implementation needed)
