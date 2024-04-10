@@ -42,6 +42,7 @@ building_collapse_keywords = [
 trash_pile_keywords = [
     "trash is piling up",
     "trash piling up",
+    "trash piling",
     "garbage is piling up",
     "garbage piling up",
     "waste is piling up",
