@@ -2,17 +2,17 @@ import praw
 import tweepy
 
 # Reddit app credentials
-reddit_client_id = "6WkJjC3repmR74-Jgg09fw"
-reddit_client_secret = "-Db2z_gzhj6cbidpzbrCJH0CWivSgw"
-reddit_username = "sparky_xelite"
-reddit_password = "Sparky@2005"
+from keys import reddit_client_id
+from keys import reddit_client_secret
+from keys import reddit_username 
+from keys import reddit_password
 
 # Twitter app credentials (API keys and tokens)
-twitter_consumer_key = "jmXHA3idAPVinKkh4CzGkc1SV"
-twitter_consumer_secret = "5hPc91G5h6LWijwavgKmxd0dtjwAr7KFpDIOMJH6CPLDqJUta4"
-bearer_token = r"AAAAAAAAAAAAAAAAAAAAAJO%2BtAEAAAAAPIilWEmherRmOKMfr9AszgFuQtM%3D8rLq8oWx2D1aGuOntlJMBrNTvbSw3ER8rplgUFvOrZQVSWGIy9"
-twitter_access_token = "1324319741998104576-NYl0W3Y845d8nbph2W8BpCBmn65YRY"
-twitter_access_token_secret = "pswdQUDzfUQxBOTlULRBg84pc5w3atYHzginCxoYfPgVP"
+from keys import twitter_consumer_key 
+from keys import twitter_consumer_secret 
+from keys import bearer_token
+from keys import twitter_access_token
+from keys import twitter_access_token_secret 
 
 # Define keywords for incident classification
 fire_keywords = ["fire breaks out",
